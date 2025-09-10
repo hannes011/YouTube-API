@@ -1,6 +1,5 @@
 package org.bgf.youtube.api;
 
-import java.io.File;
 import java.time.Instant;
 import java.util.List;
 
@@ -24,6 +23,5 @@ public interface YouTubeVideo {
 
 	List<String> getSubtitleLanguages();
 
-	File fetchThumbnail(YouTubeThumbnailType thumbnailType);
-
+	YouTubeThumbnail getThumbnail(YouTubeThumbnailType thumbnailType);
 }

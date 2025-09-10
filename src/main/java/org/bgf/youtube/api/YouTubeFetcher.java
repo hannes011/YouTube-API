@@ -1,9 +1,10 @@
 package org.bgf.youtube.api;
 
+import org.bgf.youtube.service.DefaultYouTubeFetcher;
+
 import java.util.List;
 
 public interface YouTubeFetcher {
-
 
 	/**
 	 * Initialize the fetcher with the given API key.
@@ -11,7 +12,7 @@ public interface YouTubeFetcher {
 	 * @return the fetcher instance
 	 */
 	static YouTubeFetcher create(String apiKey) {
-		return null; //todo implement
+		return new DefaultYouTubeFetcher(apiKey);
 	}
 
 	/**
@@ -34,5 +35,12 @@ public interface YouTubeFetcher {
 	 * @return a list of playlists, or an empty list if the channel does not exist
 	 */
 	List<YouTubePlaylist> getPlayLists(String channelId);
+
+	/**
+	 * Get the channel ID for the given handle (channel name starting with "@").
+	 * @param handle channel handle starting with "@"
+	 * @return the channel ID or null
+	 */
+	String getChannelIdForChannelHandle(String handle);
 
 }

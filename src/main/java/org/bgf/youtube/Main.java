@@ -4,8 +4,30 @@ import org.bgf.youtube.api.YouTubeFetcher;
 
 public class Main {
     public static void main(String[] args) {
-        var fetcher = YouTubeFetcher.create("API_KEY");
-        var channels = fetcher.getAssociatedChannels("CHANNEL_ID");
+        String apiKey = System.getenv("YOUTUBE_API_KEY");
+        String channelId = System.getenv("YOUTUBE_CHANNEL_ID");
+
+        if ((channelId == null || channelId.isBlank()) && args.length > 0) {
+            channelId = args[0];
+        }
+
+        if (apiKey == null || apiKey.isBlank() || channelId == null || channelId.isBlank()) {
+            System.err.println("Missing configuration. Set env vars YOUTUBE_API_KEY and YOUTUBE_CHANNEL_ID or pass CHANNEL_ID as arg.");
+            System.err.println("Example: YOUTUBE_API_KEY=... YOUTUBE_CHANNEL_ID=UC... mvn -q exec:java");
+            System.err.println("Or run: java -cp target/yt-api-1.0-SNAPSHOT.jar org.bgf.youtube.Main UC...\n");
+            return;
+        }
+
+        var fetcher = YouTubeFetcher.create(apiKey);
+        if (channelId.startsWith("@")) {
+            var resId = fetcher.getChannelIdForChannelHandle(channelId);
+            if (resId == null) {
+                System.err.println("The given channel handle " + channelId + " does not exist!");
+                return;
+            }
+            channelId = resId;
+        }
+        var channels = fetcher.getAssociatedChannels(channelId);
         System.out.println("Found " + channels.size() + " channels\n");
         for (var channel : channels) {
             System.out.println("Channel: " + channel.getTitle());
@@ -21,6 +43,8 @@ public class Main {
             System.out.println("All Videos:");
             fetcher.getVideos(channel.getChannelId()).forEach(video -> {
                 System.out.println(" - " + video.getTitle() + " (" + video.getId() + ")");
+                var thumbUrl = video.getThumbnail(org.bgf.youtube.api.YouTubeThumbnailType.HIGH).getUrl();
+                System.out.println("   Thumbnail URL: " + thumbUrl);
             });
             System.out.println();
         }
