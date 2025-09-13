@@ -12,17 +12,23 @@ public class LazyYouTubePlaylist implements YouTubePlaylist {
     private final String playlistId;
     private final YouTubeClient client;
 
-    private final String name;
-    private final String description;
-    private final Instant publishedAt;
+    private volatile String name;
+    private volatile String description;
+    private volatile Instant publishedAt;
+    private volatile Integer itemCount;
     private volatile List<YouTubeVideo> videos; // cached resolved videos
 
-    public LazyYouTubePlaylist(String playlistId, String name, String description, Instant publishedAt, YouTubeClient client) {
+    public LazyYouTubePlaylist(String playlistId, YouTubeClient.PlaylistDTO preload, YouTubeClient client) {
         this.playlistId = playlistId;
-        this.name = name;
-        this.description = description;
-        this.publishedAt = publishedAt;
         this.client = client;
+        if (preload != null) apply(preload);
+    }
+
+    private void apply(YouTubeClient.PlaylistDTO dto) {
+        this.name = dto.name();
+        this.description = dto.description();
+        this.publishedAt = dto.publishedAt();
+        this.itemCount = dto.itemCount();
     }
 
     @Override
@@ -43,6 +49,11 @@ public class LazyYouTubePlaylist implements YouTubePlaylist {
     @Override
     public Instant getPublishedAt() {
         return publishedAt;
+    }
+
+    @Override
+    public int getVideoCount() {
+        return itemCount == null ? 0 : itemCount;
     }
 
     @Override

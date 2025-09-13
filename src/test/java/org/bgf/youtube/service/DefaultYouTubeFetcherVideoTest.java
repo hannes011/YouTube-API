@@ -27,4 +27,6 @@ class DefaultYouTubeFetcherVideoTest {
         assertTrue(videos.stream().anyMatch(v -> v.getId().equals("v3")));
         assertFalse(videos.stream().anyMatch(v -> v.getId().equals("v2")));
     }
+
+    // getVideoCount moved to YouTubeChannel; covered in channel tests
 }

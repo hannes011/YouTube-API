@@ -24,7 +24,7 @@ public class YouTubePageIterator<T extends GenericJson> implements PageIterator<
 
     private record Page<T>(List<T> items, String nextToken) {}
 
-    public final String INIT_TOKEN = "INTI";
+    public final String INIT_TOKEN = "INIT";
 
     private final RequestExecutor<T> executor;
     private String nextToken = INIT_TOKEN;

@@ -13,5 +13,7 @@ public interface YouTubePlaylist {
 
 	Instant getPublishedAt();
 
+	int getVideoCount();
+
 	List<YouTubeVideo> fetchVideos();
 }

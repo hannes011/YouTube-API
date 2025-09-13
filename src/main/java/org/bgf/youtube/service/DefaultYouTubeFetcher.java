@@ -26,9 +26,15 @@ public class DefaultYouTubeFetcher implements YouTubeFetcher {
     }
 
     @Override
+    public YouTubeChannel getChannel(String channelId) {
+        var c = client.getChannel(channelId);
+        return new LazyYouTubeChannel(c.channelId(), c, client);
+    }
+
+    @Override
     public List<YouTubeChannel> getAssociatedChannels(String channelId) {
         return client.listAssociatedChannels(channelId).stream()
-                .map(c -> new LazyYouTubeChannel(c.channelId(), c.title(), c.language(), client))
+                .map(c -> new LazyYouTubeChannel(c.channelId(), c, client))
                 .collect(Collectors.toList());
     }
 
@@ -45,7 +51,7 @@ public class DefaultYouTubeFetcher implements YouTubeFetcher {
         return client.listPlaylists(channelId).stream()
                 .filter(pl -> !"private".equalsIgnoreCase(pl.visibility()))
                 .filter(pl -> !pl.isUploadsList())
-                .map(pl -> new LazyYouTubePlaylist(pl.playlistId(), pl.name(), pl.description(), pl.publishedAt(), client))
+                .map(pl -> new LazyYouTubePlaylist(pl.playlistId(), pl, client))
                 .collect(Collectors.toList());
     }
 

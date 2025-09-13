@@ -8,4 +8,10 @@ public interface YouTubeChannel {
 
 	String getLanguage();
 
+	int getVideoCount();
+
+	int getSubscriberCount();
+
+	int getViewCount();
+
 }

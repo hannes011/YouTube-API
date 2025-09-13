@@ -87,7 +87,7 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
         try {
             var yt = newService();
             var it = new YouTubePageIterator<Channel>(yt.channels()
-                    .list(List.of("snippet"))
+                    .list(List.of("snippet", "statistics"))
                     .setId(List.of(channelId))
                     .setKey(apiKeyProvider.get())
                     .setMaxResults(1L));
@@ -105,7 +105,7 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
             var yt = newService();
             List<ChannelDTO> all = new ArrayList<>();
             for (var chunk : Batching.partition(channelIds, 50)) {
-                var channelReq = yt.channels().list(List.of("snippet"))
+                var channelReq = yt.channels().list(List.of("snippet", "statistics"))
                         .setId(chunk)
                         .setKey(apiKeyProvider.get())
                         .setMaxResults(50L);
@@ -223,7 +223,7 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
     public List<PlaylistDTO> listPlaylists(String channelId) {
         try {
             var yt = newService();
-            var it = new YouTubePageIterator<Playlist>(yt.playlists().list(List.of("snippet", "status"))
+            var it = new YouTubePageIterator<Playlist>(yt.playlists().list(List.of("snippet", "status", "contentDetails"))
                     .setChannelId(channelId)
                     .setMaxResults(50L)
                     .setKey(apiKeyProvider.get()));

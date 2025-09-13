@@ -12,7 +12,8 @@ public interface YouTubeClient {
 
     void flushCache();
 
-    record ChannelDTO(String channelId, String title, String language) {}
+    record ChannelDTO(String channelId, String title, String language,
+                      int videoCount, int subscriberCount, int viewCount) {}
 
     record VideoDTO(String id, String title, String description, String language,
                     Instant publishedAt, int durationSeconds,
@@ -20,7 +21,8 @@ public interface YouTubeClient {
                     String visibility) {} // visibility: public|unlisted|private
 
     record PlaylistDTO(String playlistId, String name, String description,
-                       Instant publishedAt, String visibility, boolean isUploadsList) {}
+                       Instant publishedAt, String visibility, boolean isUploadsList,
+                       int itemCount) {}
 
     String getChannelId(String channelHandle);
 

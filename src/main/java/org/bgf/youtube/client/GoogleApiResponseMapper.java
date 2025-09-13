@@ -17,7 +17,10 @@ public class GoogleApiResponseMapper {
         return new YouTubeClient.ChannelDTO(
                 channel.getId(),
                 opt(channel.getSnippet()).map(ChannelSnippet::getTitle).orElse(""),
-                opt(channel.getSnippet()).map(ChannelSnippet::getDefaultLanguage).orElse(null)
+                opt(channel.getSnippet()).map(ChannelSnippet::getDefaultLanguage).orElse(null),
+                opt(channel.getStatistics()).map(ChannelStatistics::getVideoCount).map(Number::intValue).orElse(0),
+                opt(channel.getStatistics()).map(ChannelStatistics::getSubscriberCount).map(Number::intValue).orElse(0),
+                opt(channel.getStatistics()).map(ChannelStatistics::getViewCount).map(Number::intValue).orElse(0)
         );
     }
 
@@ -43,7 +46,8 @@ public class GoogleApiResponseMapper {
                 opt(pl.getSnippet()).map(PlaylistSnippet::getDescription).orElse(""),
                 opt(pl.getSnippet()).map(PlaylistSnippet::getPublishedAt).map(dt -> Instant.ofEpochMilli(dt.getValue())).orElse(null),
                 opt(pl.getStatus()).map(PlaylistStatus::getPrivacyStatus).orElse("public"),
-                uploadsPlId != null && uploadsPlId.equals(pl.getId())
+                uploadsPlId != null && uploadsPlId.equals(pl.getId()),
+                opt(pl.getContentDetails()).map(PlaylistContentDetails::getItemCount).map(Number::intValue).orElse(0)
         );
     }
 

@@ -2,7 +2,7 @@ package org.bgf.youtube;
 
 import org.bgf.youtube.api.YouTubeFetcher;
 
-public class Main {
+public class Example {
     public static void main(String[] args) {
         String apiKey = System.getenv("YOUTUBE_API_KEY");
         String channelId = System.getenv("YOUTUBE_CHANNEL_ID");
@@ -28,6 +28,7 @@ public class Main {
             channelId = resId;
         }
         var channels = fetcher.getAssociatedChannels(channelId);
+//        var channel = fetcher.getChannel(channelId);
         System.out.println("Found " + channels.size() + " channels\n");
         for (var channel : channels) {
             System.out.println("Channel: " + channel.getTitle());
@@ -36,13 +37,15 @@ public class Main {
             System.out.println("Playlists:");
             fetcher.getPlayLists(channel.getChannelId()).forEach(playlist -> {
                 System.out.println(" - " + playlist.getName() + " (" + playlist.getPlaylistId() + ")");
+                System.out.println("    - Video count: " + playlist.fetchVideos().size());
                 playlist.fetchVideos().forEach(video -> {
                     System.out.println("    - " + video.getTitle() + " (" + video.getId() + ")");
                 });
             });
             System.out.println("All Videos:");
+            System.out.println(" - Video count: " + fetcher.getVideos(channel.getChannelId()).size());
             fetcher.getVideos(channel.getChannelId()).forEach(video -> {
-                System.out.println(" - " + video.getTitle() + " (" + video.getId() + ")");
+                System.out.println(" - " + video.getTitle() + " (" + video.getId() + " - lang: " + video.getLanguage() + ")");
                 var thumbUrl = video.getThumbnail(org.bgf.youtube.api.YouTubeThumbnailType.HIGH).getUrl();
                 System.out.println("   Thumbnail URL: " + thumbUrl);
             });

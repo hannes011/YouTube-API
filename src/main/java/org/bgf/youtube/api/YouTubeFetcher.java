@@ -23,6 +23,13 @@ public interface YouTubeFetcher {
 	List<YouTubeChannel> getAssociatedChannels(String channelId);
 
 	/**
+	 * Get a channel by the given channel ID.
+	 * @param channelId ID of the channel to get
+	 * @return a channel
+	 */
+	YouTubeChannel getChannel(String channelId);
+
+	/**
 	 * Get all videos from the channel (not including private ones).
 	 * @param channelId the channel to get the videos for
 	 * @return a list of videos, or an empty list if the channel does not exist
@@ -42,5 +49,4 @@ public interface YouTubeFetcher {
 	 * @return the channel ID or null
 	 */
 	String getChannelIdForChannelHandle(String handle);
-
 }

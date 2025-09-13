@@ -51,7 +51,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.4.1</version>
                 <configuration>
-                    <mainClass>org.bgf.youtube.Main</mainClass>
+                    <mainClass>org.bgf.youtube.Example</mainClass>
                 </configuration>
             </plugin>
         </plugins>

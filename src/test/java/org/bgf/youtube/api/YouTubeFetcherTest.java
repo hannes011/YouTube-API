@@ -60,9 +60,9 @@ class YouTubeFetcherTest {
     void getPlayLists_excludesPrivateAndUploads() {
         var mock = new MockYouTubeClient();
         mock.playlists = List.of(
-                new YouTubeClient.PlaylistDTO("PL_UPLOADS", "Uploads", "d", Instant.EPOCH, "public", true),
-                new YouTubeClient.PlaylistDTO("PL_PRIVATE", "Private", "d", Instant.EPOCH, "private", false),
-                new YouTubeClient.PlaylistDTO("PL_GOOD", "Public", "d", Instant.EPOCH, "public", false)
+                new YouTubeClient.PlaylistDTO("PL_UPLOADS", "Uploads", "d", Instant.EPOCH, "public", true, 100),
+                new YouTubeClient.PlaylistDTO("PL_PRIVATE", "Private", "d", Instant.EPOCH, "private", false, 5),
+                new YouTubeClient.PlaylistDTO("PL_GOOD", "Public", "d", Instant.EPOCH, "public", false, 42)
         );
         var fetcher = new DefaultYouTubeFetcher(mock);
         var playlists = fetcher.getPlayLists("UC_example");
