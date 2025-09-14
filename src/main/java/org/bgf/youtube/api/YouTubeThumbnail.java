@@ -8,10 +8,10 @@ import java.nio.file.Path;
 
 public interface YouTubeThumbnail {
 
-	URL getUrl();
+    URL getUrl();
 
-	InputStream fetch() throws IOException;
+    InputStream fetch() throws IOException;
 
-	File fetchFile(Path target) throws IOException;
+    File fetchFile(Path target) throws IOException;
 }
 

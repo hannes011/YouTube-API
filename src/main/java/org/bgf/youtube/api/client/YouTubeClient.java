@@ -6,11 +6,10 @@ import java.util.List;
 /**
  * Abstraction over the transport/API layer. Implementations may call
  * google-api-services-youtube or any other backend. Stateless by design.
- * API keys are supplied via an {@link ApiKeyProvider} at construction time.
+ * Authentication can be provided via an API Key
+ * or an OAuth-backed HttpRequestInitializer in the concrete client.
  */
 public interface YouTubeClient {
-
-    void flushCache();
 
     record ChannelDTO(String channelId, String title, String language,
                       int videoCount, int subscriberCount, int viewCount) {}
@@ -43,4 +42,6 @@ public interface YouTubeClient {
     VideoDTO getVideo(String videoId);
 
     List<PlaylistDTO> listPlaylists(String channelId);
+
+    void flushCache();
 }

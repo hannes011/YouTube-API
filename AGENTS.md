@@ -4,7 +4,7 @@
 - Source: `src/main/java` under `org.bgf.youtube` and `org.bgf.youtube.api`.
 - Tests: `src/test/java` (JUnit 5; mirrors package paths).
 - Resources: `src/main/resources` for non-code assets.
-- Entry point: `org.bgf.youtube.Example` (reads `YOUTUBE_API_KEY` and `YOUTUBE_CHANNEL_ID`).
+- Entry point: `org.bgf.youtube.ExampleWithApiKey` (reads `YOUTUBE_API_KEY` and `YOUTUBE_CHANNEL_ID`).
 
 ## Implementation
 - Utility library for public YouTube Data API: https://developers.google.com/youtube/v3/docs
@@ -16,7 +16,7 @@
 ## Build, Test, and Development Commands
 - Build: `mvn clean package` — compiles sources and creates `target/yt-api-1.0-SNAPSHOT.jar`.
 - Run (preferred): `YOUTUBE_API_KEY=... YOUTUBE_CHANNEL_ID=UC... mvn exec:java` — uses the default Google client.
-- Run (jar): `java -cp target/yt-api-1.0-SNAPSHOT.jar org.bgf.youtube.Example UC...` — reads API key from `YOUTUBE_API_KEY`.
+- Run (jar): `java -cp target/yt-api-1.0-SNAPSHOT.jar org.bgf.youtube.ExampleWithApiKey UC...` — reads API key from `YOUTUBE_API_KEY`.
 - Tests: `mvn test` — runs unit tests; no network required (tests use fakes).
 
 ## Coding Style & Naming Conventions

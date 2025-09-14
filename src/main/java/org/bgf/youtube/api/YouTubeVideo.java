@@ -5,23 +5,23 @@ import java.util.List;
 
 public interface YouTubeVideo {
 
-	String getId();
+    String getId();
 
-	String getTitle();
+    String getTitle();
 
-	String getDescription();
+    String getDescription();
 
-	String getLanguage();
+    String getLanguage();
 
-	Instant getPublishedAt();
+    Instant getPublishedAt();
 
-	int getDurationInSeconds();
+    int getDurationInSeconds();
 
-	int getViewCount();
+    int getViewCount();
 
-	int getCommentCount();
+    int getCommentCount();
 
-	List<String> getSubtitleLanguages();
+    List<String> getSubtitleLanguages();
 
-	YouTubeThumbnail getThumbnail(YouTubeThumbnailType thumbnailType);
+    YouTubeThumbnail getThumbnail(YouTubeThumbnailType thumbnailType);
 }

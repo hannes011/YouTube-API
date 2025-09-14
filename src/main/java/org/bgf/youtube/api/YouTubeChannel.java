@@ -2,16 +2,18 @@ package org.bgf.youtube.api;
 
 public interface YouTubeChannel {
 
-	String getChannelId();
+    String getChannelId();
 
-	String getTitle();
+    String getChannelHandle();
 
-	String getLanguage();
+    String getTitle();
 
-	int getVideoCount();
+    String getLanguage();
 
-	int getSubscriberCount();
+    int getVideoCount();
 
-	int getViewCount();
+    int getSubscriberCount();
+
+    int getViewCount();
 
 }

@@ -5,15 +5,15 @@ import java.util.List;
 
 public interface YouTubePlaylist {
 
-	String getPlaylistId();
+    String getPlaylistId();
 
-	String getName();
+    String getName();
 
-	String getDescription();
+    String getDescription();
 
-	Instant getPublishedAt();
+    Instant getPublishedAt();
 
-	int getVideoCount();
+    int getVideoCount();
 
-	List<YouTubeVideo> fetchVideos();
+    List<YouTubeVideo> fetchVideos();
 }

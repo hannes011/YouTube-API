@@ -2,7 +2,7 @@ package org.bgf.youtube;
 
 import org.bgf.youtube.api.YouTubeFetcher;
 
-public class Example {
+public class ExampleWithApiKey {
     public static void main(String[] args) {
         String apiKey = System.getenv("YOUTUBE_API_KEY");
         String channelId = System.getenv("YOUTUBE_CHANNEL_ID");
@@ -19,6 +19,10 @@ public class Example {
         }
 
         var fetcher = YouTubeFetcher.create(apiKey);
+        runFullScan(fetcher, channelId);
+    }
+
+    public static void runFullScan(YouTubeFetcher fetcher, String channelId) {
         if (channelId.startsWith("@")) {
             var resId = fetcher.getChannelIdForChannelHandle(channelId);
             if (resId == null) {
@@ -37,7 +41,7 @@ public class Example {
             System.out.println("Playlists:");
             fetcher.getPlayLists(channel.getChannelId()).forEach(playlist -> {
                 System.out.println(" - " + playlist.getName() + " (" + playlist.getPlaylistId() + ")");
-                System.out.println("    - Video count: " + playlist.fetchVideos().size());
+                System.out.println("    - Video count: " + playlist.getVideoCount());
                 playlist.fetchVideos().forEach(video -> {
                     System.out.println("    - " + video.getTitle() + " (" + video.getId() + ")");
                 });

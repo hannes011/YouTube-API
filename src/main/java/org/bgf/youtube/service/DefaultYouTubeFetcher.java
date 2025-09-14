@@ -5,7 +5,6 @@ import org.bgf.youtube.api.YouTubeFetcher;
 import org.bgf.youtube.api.YouTubePlaylist;
 import org.bgf.youtube.api.YouTubeVideo;
 import org.bgf.youtube.api.client.YouTubeClient;
-import org.bgf.youtube.client.GoogleApiYouTubeClient;
 import org.bgf.youtube.model.LazyYouTubeChannel;
 import org.bgf.youtube.model.LazyYouTubePlaylist;
 import org.bgf.youtube.model.LazyYouTubeVideo;
@@ -16,10 +15,6 @@ import java.util.stream.Collectors;
 public class DefaultYouTubeFetcher implements YouTubeFetcher {
 
     private final YouTubeClient client;
-
-    public DefaultYouTubeFetcher(String apiKey) {
-        this(new GoogleApiYouTubeClient(() -> apiKey));
-    }
 
     public DefaultYouTubeFetcher(YouTubeClient client) {
         this.client = client;

@@ -1,17 +1,13 @@
 package org.bgf.youtube.client;
 
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.*;
-import org.bgf.youtube.api.client.ApiKeyProvider;
 import org.bgf.youtube.api.client.YouTubeClient;
 import org.bgf.youtube.client.cache.YouTubeCache;
 import org.bgf.youtube.service.YouTubePageIterator;
 import org.bgf.youtube.service.Batching;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.*;
 
 /**
@@ -20,23 +16,14 @@ import java.util.*;
  */
 public class GoogleApiYouTubeClient implements YouTubeClient {
     private final YouTubeCache cache = new YouTubeCache();
-    private final ApiKeyProvider apiKeyProvider;
     private final GoogleApiResponseMapper responseMapper = new GoogleApiResponseMapper();
-    private YouTube youTubeApp;
+    private final YouTube youTubeApp;
 
-    public GoogleApiYouTubeClient(ApiKeyProvider apiKeyProvider) {
-        this.apiKeyProvider = apiKeyProvider;
+    public GoogleApiYouTubeClient(YouTube youTubeApp) {
+        this.youTubeApp = youTubeApp;
     }
 
     private YouTube newService() {
-        if (youTubeApp == null) {
-            try {
-                youTubeApp = new YouTube.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory.getDefaultInstance(), request -> {
-                }).setApplicationName("bgf-youtube-api").build();
-            } catch (GeneralSecurityException | IOException e) {
-                throw new RuntimeException("Failed to init YouTube client", e);
-            }
-        }
         return youTubeApp;
     }
 
@@ -47,7 +34,6 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
             ChannelListResponse response = yt.channels()
                     .list(List.of("id"))
                     .setForHandle(channelHandle.startsWith("@") ? channelHandle.substring(1) : channelHandle)
-                    .setKey(this.apiKeyProvider.get())
                     .execute();
 
             if (response.getItems().isEmpty()) {
@@ -65,8 +51,7 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
         try {
             var yt = newService();
             var sectionsReq = yt.channelSections().list(List.of("snippet", "contentDetails"))
-                    .setChannelId(channelId)
-                    .setKey(apiKeyProvider.get());
+                    .setChannelId(channelId);
             var assocChannelIds = new YouTubePageIterator<ChannelSection>(sectionsReq).stream()
                     .filter(Objects::nonNull)
                     .filter(cs -> cs.getSnippet() != null && cs.getContentDetails() != null)
@@ -89,7 +74,6 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
             var it = new YouTubePageIterator<Channel>(yt.channels()
                     .list(List.of("snippet", "statistics"))
                     .setId(List.of(channelId))
-                    .setKey(apiKeyProvider.get())
                     .setMaxResults(1L));
             var list = it.stream().map(responseMapper::channelDTO).toList();
             return list.isEmpty() ? null : list.getFirst();
@@ -107,7 +91,6 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
             for (var chunk : Batching.partition(channelIds, 50)) {
                 var channelReq = yt.channels().list(List.of("snippet", "statistics"))
                         .setId(chunk)
-                        .setKey(apiKeyProvider.get())
                         .setMaxResults(50L);
                 var it = new YouTubePageIterator<Channel>(channelReq);
                 all.addAll(it.stream()
@@ -126,7 +109,6 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
             var yt = newService();
             var chReq = yt.channels().list(List.of("contentDetails"))
                     .setId(List.of(channelId))
-                    .setKey(apiKeyProvider.get())
                     .setMaxResults(1L);
             var chResp = chReq.execute();
             if (chResp.getItems() != null && !chResp.getItems().isEmpty()) {
@@ -156,8 +138,7 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
             var yt = newService();
             var itemsReq = yt.playlistItems().list(List.of("contentDetails"))
                     .setPlaylistId(playlistId)
-                    .setMaxResults(50L)
-                    .setKey(apiKeyProvider.get());
+                    .setMaxResults(50L);
             var itemsIter = new YouTubePageIterator<PlaylistItem>(itemsReq);
             var vidIds = itemsIter.stream()
                     .map(PlaylistItem::getContentDetails)
@@ -181,7 +162,6 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
                 var it = new YouTubePageIterator<Video>(yt.videos()
                         .list(List.of("snippet", "contentDetails", "statistics", "status"))
                         .setId(chunk)
-                        .setKey(apiKeyProvider.get())
                         .setMaxResults(50L));
                 var videos = it.stream()
                         .filter(Objects::nonNull)
@@ -205,7 +185,6 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
             var it = new YouTubePageIterator<Video>(yt.videos()
                     .list(List.of("snippet", "contentDetails", "statistics", "status"))
                     .setId(List.of(videoId))
-                    .setKey(apiKeyProvider.get())
                     .setMaxResults(1L));
             var videos = it.stream()
                     .filter(Objects::nonNull)
@@ -225,8 +204,7 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
             var yt = newService();
             var it = new YouTubePageIterator<Playlist>(yt.playlists().list(List.of("snippet", "status", "contentDetails"))
                     .setChannelId(channelId)
-                    .setMaxResults(50L)
-                    .setKey(apiKeyProvider.get()));
+                    .setMaxResults(50L));
             var uploadsPlId = getUploadsPlaylistId(channelId);
             return it.stream()
                     .map(pl -> responseMapper.playlistDTO(pl, uploadsPlId))
