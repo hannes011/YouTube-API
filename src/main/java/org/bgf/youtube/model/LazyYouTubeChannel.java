@@ -9,6 +9,7 @@ public class LazyYouTubeChannel implements YouTubeChannel {
     // cache handled by client internally; kept only for backward compat if needed (not used)
 
     private volatile String title;
+    private volatile String handle;
     private volatile String language;
     private volatile Integer videoCount;
     private volatile Integer subscriberCount;
@@ -26,6 +27,7 @@ public class LazyYouTubeChannel implements YouTubeChannel {
 
     private void apply(YouTubeClient.ChannelDTO dto) {
         this.title = dto.title();
+        this.handle = dto.handle();
         this.language = dto.language();
         this.videoCount = dto.videoCount();
         this.subscriberCount = dto.subscriberCount();
@@ -41,6 +43,12 @@ public class LazyYouTubeChannel implements YouTubeChannel {
     public String getTitle() {
         ensureLoaded();
         return title;
+    }
+
+    @Override
+    public String getChannelHandle() {
+        ensureLoaded();
+        return handle;
     }
 
     @Override

@@ -3,7 +3,9 @@ package org.bgf.youtube.client;
 import org.bgf.youtube.api.client.YouTubeClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Simple test-only mock client that returns preconfigured pages and items.
@@ -14,8 +16,9 @@ public class MockYouTubeClient implements YouTubeClient {
     public List<YouTubeClient.VideoDTO> videos = List.of();
     public List<YouTubeClient.PlaylistDTO> playlists = List.of();
 
-    public java.util.Map<String, YouTubeClient.VideoDTO> videosById = new java.util.HashMap<>();
-    public java.util.Map<String, YouTubeClient.ChannelDTO> channelsById = new java.util.HashMap<>();
+    public Map<String, YouTubeClient.VideoDTO> videosById = new HashMap<>();
+    public Map<String, YouTubeClient.ChannelDTO> channelsById = new HashMap<>();
+    public Map<String, List<String>> captionLanguagesByVideoId = new HashMap<>();
 
     public MockYouTubeClient() {}
 
@@ -70,5 +73,10 @@ public class MockYouTubeClient implements YouTubeClient {
     @Override
     public YouTubeClient.VideoDTO getVideo(String videoId) {
         return videosById.get(videoId);
+    }
+
+    @Override
+    public List<String> getCaptionLanguages(String videoId) {
+        return captionLanguagesByVideoId.getOrDefault(videoId, List.of());
     }
 }

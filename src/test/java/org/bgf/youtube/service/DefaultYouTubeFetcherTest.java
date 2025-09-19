@@ -7,12 +7,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DefaultYouTubeFetcherTest {
 
-	@Test
-	void createAndCallMethods_returnsEmptyLists() {
+    @Test
+    void createAndCallMethods_returnsEmptyLists() {
         var fetcher = new DefaultYouTubeFetcher(new MockYouTubeClient());
-		assertNotNull(fetcher);
-		assertTrue(fetcher.getAssociatedChannels("UC123").isEmpty());
-		assertTrue(fetcher.getVideos("UC123").isEmpty());
-		assertTrue(fetcher.getPlayLists("UC123").isEmpty());
-	}
+        assertNotNull(fetcher);
+        assertTrue(fetcher.getAssociatedChannels("UC123").isEmpty());
+        assertTrue(fetcher.getVideos("UC123").isEmpty());
+        assertTrue(fetcher.getPlayLists("UC123").isEmpty());
+    }
 }

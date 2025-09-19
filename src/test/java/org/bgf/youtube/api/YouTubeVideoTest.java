@@ -6,10 +6,11 @@ import org.bgf.youtube.client.MockYouTubeClient;
 import org.bgf.youtube.model.LazyYouTubeVideo;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.time.Instant;
-import java.util.List;
 import java.net.URL;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +20,8 @@ class YouTubeVideoTest {
     void getters_returnConsistentMetadata() {
         var client = new MockYouTubeClient();
         var preload = new YouTubeClient.VideoDTO(
-                "abc123", "Sample Video", "desc", "en", Instant.parse("2020-01-01T00:00:00Z"), 120, 10, 2, List.of("en"), "public");
+                "abc123", "Sample Video", "desc", "en", Instant.parse("2020-01-01T00:00:00Z"), 120, 10, 2, "public");
+        client.captionLanguagesByVideoId.put("abc123", List.of("en"));
         var v = new LazyYouTubeVideo("abc123", preload, client);
         assertEquals("abc123", v.getId());
         assertEquals("Sample Video", v.getTitle());
@@ -34,7 +36,7 @@ class YouTubeVideoTest {
 
     @Test
     void fetchThumbnail_returnsStreamPerType_usingInjectedUrlFetcher() {
-        UrlFetcher fetcher = (URL url) -> new java.io.ByteArrayInputStream(new byte[]{1,2,3});
+        UrlFetcher fetcher = (URL url) -> new ByteArrayInputStream(new byte[]{1, 2, 3});
         var client = new MockYouTubeClient();
         var v = new LazyYouTubeVideo("abc123", null, client, fetcher);
         for (var t : YouTubeThumbnailType.values()) {

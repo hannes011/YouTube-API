@@ -5,7 +5,6 @@ import org.bgf.youtube.api.client.YouTubeClient;
 import org.bgf.youtube.service.DurationParser;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,7 +16,9 @@ public class GoogleApiResponseMapper {
         return new YouTubeClient.ChannelDTO(
                 channel.getId(),
                 opt(channel.getSnippet()).map(ChannelSnippet::getTitle).orElse(""),
-                opt(channel.getSnippet()).map(ChannelSnippet::getDefaultLanguage).orElse(null),
+                opt(channel.getSnippet()).map(ChannelSnippet::getCustomUrl).orElse(""),
+                opt(opt(channel.getSnippet()).map(ChannelSnippet::getDefaultLanguage).orElse(null)).orElse(
+                        opt(channel.getBrandingSettings()).map(ChannelBrandingSettings::getChannel).map(ChannelSettings::getDefaultLanguage).orElse(null)),
                 opt(channel.getStatistics()).map(ChannelStatistics::getVideoCount).map(Number::intValue).orElse(0),
                 opt(channel.getStatistics()).map(ChannelStatistics::getSubscriberCount).map(Number::intValue).orElse(0),
                 opt(channel.getStatistics()).map(ChannelStatistics::getViewCount).map(Number::intValue).orElse(0)
@@ -34,7 +35,6 @@ public class GoogleApiResponseMapper {
                 DurationParser.parseDurationSeconds(opt(v.getContentDetails()).map(VideoContentDetails::getDuration).orElse(null)),
                 opt(v.getStatistics()).map(VideoStatistics::getViewCount).map(Number::intValue).orElse(0),
                 opt(v.getStatistics()).map(VideoStatistics::getCommentCount).map(Number::intValue).orElse(0),
-                List.of(),
                 opt(v.getStatus()).map(VideoStatus::getPrivacyStatus).orElse("public")
         );
     }

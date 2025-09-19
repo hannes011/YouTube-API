@@ -47,8 +47,8 @@ class YouTubeFetcherTest {
     void getVideos_excludesPrivateVideos() {
         var mock = new MockYouTubeClient();
         mock.videos = List.of(
-                new YouTubeClient.VideoDTO("v1", "Public", "d", "en", Instant.EPOCH, 10, 1, 0, List.of(), "public"),
-                new YouTubeClient.VideoDTO("v2", "Private", "d", "en", Instant.EPOCH, 10, 1, 0, List.of(), "private")
+                new YouTubeClient.VideoDTO("v1", "Public", "d", "en", Instant.EPOCH, 10, 1, 0, "public"),
+                new YouTubeClient.VideoDTO("v2", "Private", "d", "en", Instant.EPOCH, 10, 1, 0, "private")
         );
         var fetcher = new DefaultYouTubeFetcher(mock);
         var videos = fetcher.getVideos("UC_example");
@@ -74,8 +74,8 @@ class YouTubeFetcherTest {
     void getVideos_includesAllFromClient() {
         var mock = new MockYouTubeClient();
         mock.videos = List.of(
-                new YouTubeClient.VideoDTO("v1", "T1", "d", "en", Instant.EPOCH, 10, 1, 0, List.of(), "public"),
-                new YouTubeClient.VideoDTO("v2", "T2", "d", "en", Instant.EPOCH, 10, 1, 0, List.of(), "public")
+                new YouTubeClient.VideoDTO("v1", "T1", "d", "en", Instant.EPOCH, 10, 1, 0, "public"),
+                new YouTubeClient.VideoDTO("v2", "T2", "d", "en", Instant.EPOCH, 10, 1, 0, "public")
         );
         var fetcher = new DefaultYouTubeFetcher(mock);
         var videos = fetcher.getVideos("UC_example");

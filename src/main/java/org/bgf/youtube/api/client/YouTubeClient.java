@@ -11,13 +11,12 @@ import java.util.List;
  */
 public interface YouTubeClient {
 
-    record ChannelDTO(String channelId, String title, String language,
+    record ChannelDTO(String channelId, String title, String handle, String language,
                       int videoCount, int subscriberCount, int viewCount) {}
 
     record VideoDTO(String id, String title, String description, String language,
                     Instant publishedAt, int durationSeconds,
-                    int viewCount, int commentCount, List<String> subtitleLangs,
-                    String visibility) {} // visibility: public|unlisted|private
+                    int viewCount, int commentCount, String visibility) {} // visibility: public|unlisted|private
 
     record PlaylistDTO(String playlistId, String name, String description,
                        Instant publishedAt, String visibility, boolean isUploadsList,
@@ -40,6 +39,8 @@ public interface YouTubeClient {
     List<VideoDTO> listVideos(List<String> videoIds);
 
     VideoDTO getVideo(String videoId);
+
+    List<String> getCaptionLanguages(String videoId);
 
     List<PlaylistDTO> listPlaylists(String channelId);
 

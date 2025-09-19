@@ -15,8 +15,8 @@ class DefaultYouTubeFetcherChannelTest {
     void mapsChannelsFromClient() {
         var client = new MockYouTubeClient();
         client.channels = List.of(
-                new YouTubeClient.ChannelDTO("UC1", "Title 1", "en", 10, 100, 1000),
-                new YouTubeClient.ChannelDTO("UC2", "Title 2", "de", 5, 50, 500)
+                new YouTubeClient.ChannelDTO("UC1", "Title 1", "@title1", "en", 10, 100, 1000),
+                new YouTubeClient.ChannelDTO("UC2", "Title 2", "@title2", "de", 5, 50, 500)
         );
         var fetcher = new DefaultYouTubeFetcher(client);
         List<YouTubeChannel> result = fetcher.getAssociatedChannels("UCX");

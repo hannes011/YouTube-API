@@ -72,7 +72,7 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
         try {
             var yt = newService();
             var it = new YouTubePageIterator<Channel>(yt.channels()
-                    .list(List.of("snippet", "statistics"))
+                    .list(List.of("snippet", "statistics", "brandingSettings"))
                     .setId(List.of(channelId))
                     .setMaxResults(1L));
             var list = it.stream().map(responseMapper::channelDTO).toList();
@@ -89,7 +89,7 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
             var yt = newService();
             List<ChannelDTO> all = new ArrayList<>();
             for (var chunk : Batching.partition(channelIds, 50)) {
-                var channelReq = yt.channels().list(List.of("snippet", "statistics"))
+                var channelReq = yt.channels().list(List.of("snippet", "statistics", "brandingSettings"))
                         .setId(chunk)
                         .setMaxResults(50L);
                 var it = new YouTubePageIterator<Channel>(channelReq);
@@ -195,6 +195,27 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
             return vid;
         } catch (IOException e) {
             throw new RuntimeException("YouTube API error", e);
+        }
+    }
+
+    @Override
+    public List<String> getCaptionLanguages(String videoId) {
+        try {
+            var yt = newService();
+            var req = yt.captions().list(List.of("snippet"), videoId);
+            var resp = req.execute();
+            var items = resp.getItems();
+            if (items == null || items.isEmpty()) return List.of();
+            return items.stream()
+                    .map(Caption::getSnippet)
+                    .filter(Objects::nonNull)
+                    .map(CaptionSnippet::getLanguage)
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .toList();
+        } catch (IOException e) {
+            // Best effort; if captions API is unavailable or forbidden, fall back silently
+            return List.of();
         }
     }
 

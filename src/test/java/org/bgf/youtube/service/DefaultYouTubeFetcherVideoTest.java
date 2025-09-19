@@ -16,9 +16,9 @@ class DefaultYouTubeFetcherVideoTest {
     void filtersPrivateVideos() {
         var client = new MockYouTubeClient();
         client.videos = List.of(
-                new YouTubeClient.VideoDTO("v1", "Public 1", "d", "en", Instant.EPOCH, 10, 1, 0, List.of("en"), "public"),
-                new YouTubeClient.VideoDTO("v2", "Private", "d", "en", Instant.EPOCH, 10, 1, 0, List.of(), "private"),
-                new YouTubeClient.VideoDTO("v3", "Unlisted", "d", "en", Instant.EPOCH, 10, 1, 0, List.of(), "unlisted")
+                new YouTubeClient.VideoDTO("v1", "Public 1", "d", "en", Instant.EPOCH, 10, 1, 0, "public"),
+                new YouTubeClient.VideoDTO("v2", "Private", "d", "en", Instant.EPOCH, 10, 1, 0, "private"),
+                new YouTubeClient.VideoDTO("v3", "Unlisted", "d", "en", Instant.EPOCH, 10, 1, 0, "unlisted")
         );
         var fetcher = new DefaultYouTubeFetcher(client);
         List<YouTubeVideo> videos = fetcher.getVideos("UCX");

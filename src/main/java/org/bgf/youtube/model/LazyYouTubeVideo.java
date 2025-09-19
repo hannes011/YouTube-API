@@ -46,14 +46,13 @@ public class LazyYouTubeVideo implements YouTubeVideo {
         this.durationInSeconds = dto.durationSeconds();
         this.viewCount = dto.viewCount();
         this.commentCount = dto.commentCount();
-        this.subtitleLanguages = dto.subtitleLangs();
     }
 
-    private void ensureLoaded() {
-        if (title != null && description != null && language != null && publishedAt != null && durationInSeconds != null && viewCount != null && commentCount != null && subtitleLanguages != null)
+    private void ensureMetadataLoaded() {
+        if (title != null && description != null && language != null && publishedAt != null && durationInSeconds != null && viewCount != null && commentCount != null)
             return;
         synchronized (this) {
-            if (title == null || description == null || language == null || publishedAt == null || durationInSeconds == null || viewCount == null || commentCount == null || subtitleLanguages == null) {
+            if (title == null || description == null || language == null || publishedAt == null || durationInSeconds == null || viewCount == null || commentCount == null) {
                 var dto = client.getVideo(id);
                 if (dto != null) apply(dto);
             }
@@ -67,50 +66,56 @@ public class LazyYouTubeVideo implements YouTubeVideo {
 
     @Override
     public String getTitle() {
-        ensureLoaded();
+        ensureMetadataLoaded();
         return title;
     }
 
     @Override
     public String getDescription() {
-        ensureLoaded();
+        ensureMetadataLoaded();
         return description;
     }
 
     @Override
     public String getLanguage() {
-        ensureLoaded();
+        ensureMetadataLoaded();
         return language;
     }
 
     @Override
     public Instant getPublishedAt() {
-        ensureLoaded();
+        ensureMetadataLoaded();
         return publishedAt;
     }
 
     @Override
     public int getDurationInSeconds() {
-        ensureLoaded();
+        ensureMetadataLoaded();
         return durationInSeconds == null ? 0 : durationInSeconds;
     }
 
     @Override
     public int getViewCount() {
-        ensureLoaded();
+        ensureMetadataLoaded();
         return viewCount == null ? 0 : viewCount;
     }
 
     @Override
     public int getCommentCount() {
-        ensureLoaded();
+        ensureMetadataLoaded();
         return commentCount == null ? 0 : commentCount;
     }
 
     @Override
     public List<String> getSubtitleLanguages() {
-        ensureLoaded();
-        return subtitleLanguages == null ? List.of() : subtitleLanguages;
+        ensureMetadataLoaded();
+        synchronized (this) {
+            if (subtitleLanguages == null) {
+                var langs = client.getCaptionLanguages(id);
+                subtitleLanguages = (langs == null) ? List.of() : List.copyOf(langs);
+            }
+        }
+        return subtitleLanguages;
     }
 
     @Override
