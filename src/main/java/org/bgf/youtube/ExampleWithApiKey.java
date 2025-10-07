@@ -47,13 +47,15 @@ public class ExampleWithApiKey {
                 });
             });
             System.out.println("All Videos:");
-            System.out.println(" - Video count: " + fetcher.getVideos(channel.getChannelId()).size());
-            fetcher.getVideos(channel.getChannelId()).forEach(video -> {
-                System.out.println(" - " + video.getTitle() + " (" + video.getId() + " - lang: " + video.getLanguage() + ")");
-                var thumbUrl = video.getThumbnail(org.bgf.youtube.api.YouTubeThumbnailType.HIGH).getUrl();
+            List<YouTubeVideo> videos = fetcher.getVideos(channel.getChannelId());
+            System.out.println(" - Video count: " + videos.size());
+            videos.forEach(video -> {
+                System.out.println(" - " + video.getTitle() + " (ID: " + video.getId() + " - lang: " + video.getLanguage() + ")");
+//                System.out.println(" - " + video.getTitle() + " (ID: " + video.getId() + " - lang: " + video.getLanguage() + " - sub: " + String.join(",", video.getSubtitleLanguages()) + ")");
+                var thumbUrl = video.getThumbnail(YouTubeThumbnailType.HIGH).getUrl();
                 System.out.println("   Thumbnail URL: " + thumbUrl);
             });
-            System.out.println();
+            System.out.println("Finished");
         }
     }
 }

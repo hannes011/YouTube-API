@@ -157,8 +157,12 @@ public class GoogleApiYouTubeClient implements YouTubeClient {
     public List<VideoDTO> listVideos(List<String> videoIds) {
         try {
             var yt = newService();
-            List<VideoDTO> all = new ArrayList<>();
-            for (var chunk : Batching.partition(videoIds, 50)) {
+            List<VideoDTO> cachedVids = videoIds.stream().map(cache::getVideo).filter(Objects::nonNull).toList();
+            List<String> cachedIds = cachedVids.stream().map(VideoDTO::id).toList();
+            List<VideoDTO> all = new ArrayList<>(cachedVids);
+
+            List<String> uncachedIds = videoIds.stream().filter(id -> !cachedIds.contains(id)).toList();
+            for (var chunk : Batching.partition(uncachedIds, 50)) {
                 var it = new YouTubePageIterator<Video>(yt.videos()
                         .list(List.of("snippet", "contentDetails", "statistics", "status"))
                         .setId(chunk)
