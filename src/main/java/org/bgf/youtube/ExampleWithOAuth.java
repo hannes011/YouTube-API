@@ -14,6 +14,8 @@ public class ExampleWithOAuth {
             throw new IllegalStateException("Missing GOOGLE_CLIENT_SECRETS_PATH env var pointing to OAuth client secrets JSON");
         }
         try {
+            clientSecretsPath = ExampleWithOAuth.class.getResource(clientSecretsPath) == null ? clientSecretsPath
+                    : ExampleWithOAuth.class.getResource(clientSecretsPath).getPath();
             return new FileInputStream(clientSecretsPath);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to open client secrets at " + clientSecretsPath, e);

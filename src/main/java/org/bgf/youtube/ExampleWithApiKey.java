@@ -1,6 +1,10 @@
 package org.bgf.youtube;
 
 import org.bgf.youtube.api.YouTubeFetcher;
+import org.bgf.youtube.api.YouTubeThumbnailType;
+import org.bgf.youtube.api.YouTubeVideo;
+
+import java.util.List;
 
 public class ExampleWithApiKey {
     public static void main(String[] args) {
@@ -37,6 +41,7 @@ public class ExampleWithApiKey {
         for (var channel : channels) {
             System.out.println("Channel: " + channel.getTitle());
             System.out.println("ID: " + channel.getChannelId());
+            System.out.println("Handle: " + channel.getChannelHandle());
             System.out.println("Language: " + channel.getLanguage());
             System.out.println("Playlists:");
             fetcher.getPlayLists(channel.getChannelId()).forEach(playlist -> {
